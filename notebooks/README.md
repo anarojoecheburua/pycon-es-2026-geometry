@@ -1,71 +1,45 @@
-# The notebooks, step by step
+# A walk through the notebooks
 
-This page explains each notebook in plain words, so you know what you're about to see before you open it. You don't need any maths to follow along here. The notebooks themselves have the formulas and the code, but every step starts with the idea in words first.
+This page tells you what happens in each notebook before you open it, so you know where the story is going. You don't need any maths to follow it. The notebooks have the formulas and the code, and every step there still starts with the idea first.
 
-Run them in order. Each one builds on the one before.
+They're meant to be read in order, because each one picks up where the last one stopped.
 
-## 01 · Embeddings and cosine similarity
+## 01 · Embeddings and cosine similarity 🧭
 
-**The question:** when a search system says two pieces of text are "similar", what is it actually computing, and when should you not trust that number?
+Every retrieval system you've used lately does the same trick. It turns text into a long list of numbers and then looks for the lists that point in the most similar direction to your question. This notebook takes that trick apart.
 
-1. **Turn a sentence into numbers.** You give an embedding model one sentence and it returns a list of 384 numbers. That list is the sentence's position in a 384-dimensional space.
-2. **A bit of history.** Older models gave every word one fixed vector. Newer ones give a word a vector that depends on the sentence around it. Retrieval systems use one vector per chunk of text.
-3. **Look at it in 2D.** You embed twelve short sentences about late invoices, football and recipes, squash them down to two dimensions and plot them. Sentences on the same topic land near each other.
-4. **Measure similarity with cosine.** Cosine similarity compares the direction of two vectors. You compute it by hand, check it against scikit-learn, and see all twelve sentences compared in a heatmap.
-5. **Three ways to measure, one answer.** Dot product, cosine and straight-line distance look different, but once every vector has length 1 they rank results in exactly the same order. You check this with real numbers.
-6. **Build a tiny search engine.** A handful of chunks, one query, one line of maths, and you get the top three results.
-7. **Mix in keyword search.** BM25 matches exact words, which is great for an invoice number. Embeddings match meaning, which is great for a paraphrase. You combine the two rankings with Reciprocal Rank Fusion and see each one win in a different case.
-8. **First crack: the scores bunch up.** Even completely unrelated sentences get a cosine well above zero, and where that band sits depends on the model. So "anything above 0.8 is relevant" means something different for every model.
-9. **Second crack: cosine goes both ways.** "A dog is an animal" is true and "an animal is a dog" is not, yet cosine gives both directions the same score. You also see a small trick that leaves everything training cares about unchanged but moves the cosine scores around.
-10. **Takeaway.** Cosine in flat space is a choice with consequences, and notebook 02 tries a different space.
+You start by giving an embedding model one sentence and getting 384 numbers back, then you squash twelve sentences about late invoices, football and recipes down to two dimensions and watch them fall into three groups on their own. From there you compute cosine similarity by hand, check it against scikit-learn, and see that dot product, cosine and straight-line distance all give exactly the same ranking once your vectors have length 1. With that in place you build a tiny search engine in a few lines, add keyword search with BM25, and fuse the two with Reciprocal Rank Fusion. My favourite moment is the invoice question, where the embedding search puts the wrong invoice at the top and keyword search saves the day.
 
-## 02 · Hyperbolic embeddings
+Then come the cracks. Unrelated sentences score 0.06 on average with a modern embedding model and 0.85 with the same network before contrastive training, so a fixed threshold like 0.8 means something completely different from one model to the next. And cosine can't tell "a dog is an animal" from "an animal is a dog" (they score 0.99), while a small rescaling trick leaves training untouched and still moves the cosine scores around. That's the cliffhanger for notebook 02.
 
-**The question:** if flat space can't hold a hierarchy, is there a space that can?
+## 02 · Hyperbolic embeddings 🌳
 
-1. **Why flat space struggles with trees.** A tree doubles its nodes at every level, and flat space only grows like a polynomial, so the deep levels run out of room. You see it on one plot.
-2. **Three curvatures.** You measure how long a circle is on a sphere, on a flat plane and in hyperbolic space. In hyperbolic space circles grow faster and faster, and that extra room is what trees need.
-3. **The Poincaré disk from scratch.** Hyperbolic space squeezed into a disc, where the edge is infinitely far away. You write the distance formula in a few lines of numpy, see that a small step near the edge is a huge distance, and draw a whole tree in the disk.
-4. **Train a hierarchy in 2D.** You give gensim a list of (child, parent) pairs like ("dog", "mammal") and it places them in the disk. General words land near the centre, specific ones near the edge, and each branch gets its own direction.
-5. **Flat vs hyperbolic, same data.** You train a 121-node tree in both spaces with exactly the same settings and score how well each one keeps the hierarchy. Hyperbolic wins by a lot, and the published WordNet results say the same thing at scale.
-6. **geoopt.** A quick tour of the PyTorch library that handles the curved-space maths, checked against our hand-written formula.
-7. **Results from retrieval and LLMs.** What happened when researchers put hyperbolic geometry into RAG, image–text models and LLMs.
-8. **The costs.** Running out of decimal places near the edge, trickier training, and no support in today's vector databases.
+If flat space can't hold a hierarchy, maybe a different space can. This notebook goes looking for one.
 
-## 03 · Moving frames
+It opens with one plot that tells the whole story. A tree doubles its nodes at every level, flat space only grows like a polynomial, and hyperbolic space grows exponentially, just like the tree. You compare circles on a sphere, a plane and a hyperbolic plane, then build the Poincaré disk from scratch in numpy and draw a whole tree inside it, where the edge is infinitely far away and there's always room for more branches.
 
-**The question:** what does it actually mean to choose a geometry, and how do you find the number worth comparing?
+Next you train the little animal and document hierarchy from the talk with gensim, and general words like "animal" land near the centre while specific ones like "dog" end up near the edge. Then the race: the same 121-node tree, the same loss, the same optimiser and the same seed, once in flat space and once in hyperbolic space. Hyperbolic wins with a MAP of 0.954 against 0.599, and the published WordNet results tell the same story at scale. The notebook finishes with what the research says about hyperbolic retrieval and LLMs, and with an honest look at the costs, including the moment float32 simply runs out of digits near the edge.
 
-1. **Klein's idea.** In 1872 Felix Klein said a geometry is whatever stays the same when you apply a group of transformations. You see what that means for Euclidean distance, cosine and hyperbolic distance, and why your similarity metric is really a statement about what you decided doesn't matter.
-2. **What a moving frame is.** Put every object into a standard position, then compare what's left. You get the formal definition and a four-step recipe: pick the group, choose normalisations, solve for the frame, read off the invariants.
-3. **The curvature of a curve, in SymPy.** You run the recipe on a curve in the plane, with rotations and translations as the symmetries. Move the point to the origin, rotate the tangent flat, and the curvature formula falls out without anyone typing it in. Then you check it on a circle.
-4. **Noether in one cell.** Every symmetry gives a conservation law. SymPy checks that rotating symmetry gives conserved angular momentum, and you see how moving frames write these laws in a readable form (including the discrete version from my own research).
-5. **A moving frame for the Poincaré disk.** The frame behind the talk's demo. Slide the query point to the centre, rotate the other point onto an axis, and the only number left is the hyperbolic distance. You see it in a three-panel picture and check it under 1,000 random symmetries.
-6. **The demo.** A pointer to notebook 05, where the full search demo lives.
-7. **Why this matters for embeddings.** Arbitrary cosine scores as a symmetry problem, equivariant ML that already uses frames, and a conservation law hiding inside ordinary neural network training, which you watch happen live.
-8. **Closing thought.** Decide which symmetries matter, build the geometry around them, then measure only what survives.
+## 03 · Moving frames 🔄
 
-## 04 · Curved spaces in Python
+This is the notebook closest to my own research, and it asks the question underneath the first two: what does it actually mean to choose a geometry?
 
-**The question:** how hard is it to actually start working in a curved space? (Not very.)
+It starts with Felix Klein in 1872, who said a geometry is defined by the transformations you've decided don't matter and the things they leave unchanged. That gives the line I most want you to take home, that your similarity metric is a statement about what you decided doesn't matter. Moving frames turn Klein's idea into a recipe. Move the object into a standard position, then read off whatever is left.
 
-1. **geoopt: distances in the Poincaré ball.** The two numbers from the slide: the same ruler step of 0.09 is 0.18 near the centre and 2.35 near the edge. You also see where 32-bit floats run out of digits near the edge, and how a library can hide that from you.
-2. **geoopt: the Lorentz model.** The same hyperbolic space drawn as a bowl-shaped surface with no edge. You map points across and check the distances match.
-3. **geoopt: training on a curved space.** You train the tiny animal and document hierarchy twice, changing one line. With an optimiser that follows the curve, every point stays inside the disk. With plain Adam, points fly out of it and training breaks.
-4. **geoopt: product manifolds.** Glue a hyperbolic piece, a sphere and a flat piece into one space, for data that's partly a tree, partly a loop and partly plain similarity.
-5. **gensim: the quickest start.** Five lines from a list of (child, parent) pairs to a hyperbolic embedding, plus a warning about one of its helper functions.
-6. **HypLL: hyperbolic neural network layers.** A batch of data goes through a hyperbolic linear layer and a hyperbolic ReLU. There's also a gotcha with how HypLL sets the curvature.
-7. **geomstats: three curvatures side by side.** Shortest paths on a sphere, a plane and a hyperbolic disk, and the circle-length formulas from the talk measured numerically.
-8. **What about vector databases?** None of them has a hyperbolic index yet. You try brute force (fast enough for 100,000 points), re-ranking a flat shortlist (it needs a big shortlist), and a change of coordinates that turns exact hyperbolic search into ordinary dot-product search.
-9. **Takeaway.** The maths is packaged, the costs are manageable, and a good weekend project is to embed your own taxonomy both ways.
+You run that recipe in SymPy on a curve in the plane, and the curvature formula appears without anyone typing it in. Then Emmy Noether shows up, with symmetries giving conservation laws, and SymPy checks that rotational symmetry really does conserve angular momentum. After that you build the moving frame on the Poincaré disk that powers the talk's demo, and the notebook closes by bringing it all back to machine learning, including a conservation law hiding inside ordinary neural network training that you can watch happen live.
 
-## 05 · The demo: searching a hierarchy with a moving frame
+## 04 · Curved spaces in Python 🐍
 
-**The question:** can we search a hierarchy in a way that's correct and doesn't depend on any arbitrary choice? This is the demo from the talk, start to finish.
+The good news after all that theory is that the maths is already packaged, and this notebook is a hands-on tour of the four libraries on the slide.
 
-1. **Embed the hierarchy.** Twelve words (animals and documents) go into the Poincaré disk with gensim, stored as complex numbers. General words land near the centre, specific ones near the edge.
-2. **The group and the moving frame.** For a query word, the frame slides it to the centre of the disk, then rotates the other word onto a straight axis. The only thing left is one number, how far that other word is from the centre. You see it in a three-panel picture with dog and owl.
-3. **The invariant is the hyperbolic distance.** That one number turns out to be exactly the hyperbolic distance, matching the textbook formula and gensim to about 14 decimal places, for every pair of words, even though we never typed the formula in.
-4. **Search.** Sort by that number and you get a search that follows the hierarchy. For dog you get whale and cat first (siblings), then mammal (the parent).
-5. **Nothing arbitrary.** You move the whole embedding with 100 random symmetries of the disk. The picture changes completely, and the search results never change. Then you try the same with cosine similarity, and its answers change every time.
-6. **Takeaway.** Choose the symmetry, put everything in standard position, then measure only what survives.
+With geoopt you reproduce the two numbers from the talk (the same ruler step of 0.09 is 0.18 near the centre and 2.35 near the edge), move between the Poincaré ball and the Lorentz model, and see what happens when you train with an optimiser that doesn't follow the curve. Spoiler, the points fly straight out of the disk. You glue hyperbolic, spherical and flat pieces into one product manifold, go from a list of pairs to a hyperbolic embedding in five lines of gensim, push data through a hyperbolic layer with HypLL, and measure circles on three kinds of space with geomstats.
+
+Along the way you'll meet a few gotchas I found while checking each library, like HypLL's curvature quietly coming out as 1.313 and geoopt hiding precision errors near the edge. The last section asks what to do when your vector database has no hyperbolic index, and ends with a change of coordinates that turns exact hyperbolic search into an ordinary dot-product search.
+
+## 05 · The demo ✨
+
+This is the demo from the talk, start to finish, and it puts everything together.
+
+Twelve words go into the Poincaré disk. For any query word, a moving frame slides it to the centre and rotates the other word onto a straight axis, and the one number left over turns out to be exactly the hyperbolic distance, matching the textbook formula and gensim to about 14 decimal places. Sort by that number and you get a search that follows the hierarchy, so for "dog" you get whale and cat first and then mammal.
+
+Then the fun part. You move the whole embedding with 100 random symmetries of the disk, the picture changes completely every time, and the search results never change once. Try the same thing with cosine similarity and its answers change every single time. Choose the symmetry, put everything in standard position, then measure only what survives.

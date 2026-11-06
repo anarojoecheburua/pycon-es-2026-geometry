@@ -21,7 +21,7 @@ Then open the `notebooks/` folder and start with `01`. The first run downloads t
 
 ## The notebooks
 
-If you want the plain-words, step-by-step version of what happens in each notebook, have a look at [`notebooks/README.md`](notebooks/README.md).
+If you'd like a friendlier walk through what happens in each notebook before you open it, have a look at [`notebooks/README.md`](notebooks/README.md).
 
 | Notebook | What you'll see |
 |---|---|
