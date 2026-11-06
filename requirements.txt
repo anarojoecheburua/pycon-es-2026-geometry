@@ -8,3 +8,5 @@ geoopt
 torch
 sympy
 jupyter
+hypll
+geomstats

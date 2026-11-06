@@ -44,3 +44,17 @@ Run them in order. Each one builds on the one before.
 6. **The demo.** A pointer to notebook 05, where the full search demo lives.
 7. **Why this matters for embeddings.** Arbitrary cosine scores as a symmetry problem, equivariant ML that already uses frames, and a conservation law hiding inside ordinary neural network training, which you watch happen live.
 8. **Closing thought.** Decide which symmetries matter, build the geometry around them, then measure only what survives.
+
+## 04 · Curved spaces in Python
+
+**The question:** how hard is it to actually start working in a curved space? (Not very.)
+
+1. **geoopt: distances in the Poincaré ball.** The two numbers from the slide: the same ruler step of 0.09 is 0.18 near the centre and 2.35 near the edge. You also see where 32-bit floats run out of digits near the edge, and how a library can hide that from you.
+2. **geoopt: the Lorentz model.** The same hyperbolic space drawn as a bowl-shaped surface with no edge. You map points across and check the distances match.
+3. **geoopt: training on a curved space.** You train the tiny animal and document hierarchy twice, changing one line. With an optimiser that follows the curve, every point stays inside the disk. With plain Adam, points fly out of it and training breaks.
+4. **geoopt: product manifolds.** Glue a hyperbolic piece, a sphere and a flat piece into one space, for data that's partly a tree, partly a loop and partly plain similarity.
+5. **gensim: the quickest start.** Five lines from a list of (child, parent) pairs to a hyperbolic embedding, plus a warning about one of its helper functions.
+6. **HypLL: hyperbolic neural network layers.** A batch of data goes through a hyperbolic linear layer and a hyperbolic ReLU. There's also a gotcha with how HypLL sets the curvature.
+7. **geomstats: three curvatures side by side.** Shortest paths on a sphere, a plane and a hyperbolic disk, and the circle-length formulas from the talk measured numerically.
+8. **What about vector databases?** None of them has a hyperbolic index yet. You try brute force (fast enough for 100,000 points), re-ranking a flat shortlist (it needs a big shortlist), and a change of coordinates that turns exact hyperbolic search into ordinary dot-product search.
+9. **Takeaway.** The maths is packaged, the costs are manageable, and a good weekend project is to embed your own taxonomy both ways.

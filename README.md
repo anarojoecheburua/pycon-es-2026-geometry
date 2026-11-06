@@ -27,7 +27,8 @@ If you want the plain-words, step-by-step version of what happens in each notebo
 |---|---|
 | [01 · Embeddings and cosine similarity](notebooks/01_embeddings_and_cosine.ipynb) | How text becomes a vector, how retrieval ranks chunks with cosine, BM25 and hybrid search, and the two places cosine quietly misleads you (anisotropy and symmetry). |
 | [02 · Hyperbolic embeddings](notebooks/02_hyperbolic_embeddings.ipynb) | Why trees don't fit in flat space, the Poincaré disk built from scratch, and a 2D hyperbolic embedding of a small hierarchy next to a Euclidean one. |
-| [03 · Moving frames](notebooks/03_moving_frames.ipynb) | Klein's idea of geometry as "what survives a group of transformations", a moving frame computed in SymPy, and a nearest-neighbour search on the Poincaré disk built from a moving frame. |
+| [03 · Moving frames](notebooks/03_moving_frames.ipynb) | Klein's idea of geometry as "what survives a group of transformations", a moving frame computed in SymPy, and the frame on the Poincaré disk that powers the demo. |
+| [04 · Curved spaces in Python](notebooks/04_curved_spaces_in_python.ipynb) | Four Python packages for curved spaces, and how to start with each. |
 
 ## About the author
 
