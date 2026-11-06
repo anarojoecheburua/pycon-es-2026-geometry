@@ -1,0 +1,10 @@
+numpy
+matplotlib
+scikit-learn
+sentence-transformers
+rank-bm25
+gensim
+geoopt
+torch
+sympy
+jupyter
