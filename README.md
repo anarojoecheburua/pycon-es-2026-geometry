@@ -8,7 +8,7 @@ Everything runs on a laptop CPU, and every notebook is saved with its outputs, s
 
 ## How to run
 
-You'll need Python 3.11 or newer.
+You'll need Python 3.11 or newer (the saved outputs were made with Python 3.13).
 
 ```bash
 python -m venv .venv
@@ -17,7 +17,9 @@ pip install -r requirements.txt
 jupyter lab
 ```
 
-Then open the `notebooks/` folder and start with `01`. The first run downloads the small embedding model `all-MiniLM-L6-v2` (about 90 MB), so give it a minute.
+Then open the `notebooks/` folder and start with `01`. The first run of notebook 01 downloads two small models from Hugging Face, `all-MiniLM-L6-v2` and the same network before contrastive training (`nreimers/MiniLM-L6-H384-uncased`, used in Step 8), about 90 MB each, so give it a minute.
+
+The outputs saved in the notebooks come from gensim 4.4.0, sentence-transformers 6.2.0, torch 2.15.0, geoopt 0.5.1, hypll 0.1.1 and geomstats 2.8.0. The demo's exact neighbours depend on the gensim version, so if yours come out different, check that first.
 
 ## The notebooks
 
@@ -26,22 +28,25 @@ If you'd like a friendlier walk through what happens in each notebook before you
 | Notebook | What you'll see |
 |---|---|
 | [01 · Embeddings and cosine similarity](notebooks/01_embeddings_and_cosine.ipynb) | How text becomes a vector, how retrieval ranks chunks with cosine, BM25 and hybrid search, and the two places cosine quietly misleads you (anisotropy and symmetry). |
-| [02 · Hyperbolic embeddings](notebooks/02_hyperbolic_embeddings.ipynb) | Why trees don't fit in flat space, the Poincaré disk built from scratch, and a 2D hyperbolic embedding of a small hierarchy next to a Euclidean one. |
+| [02 · Hyperbolic embeddings](notebooks/02_hyperbolic_embeddings.ipynb) | Why trees don't fit in flat space, the Poincaré disk built from scratch, a small hierarchy trained with gensim, and a race between hyperbolic and flat space on a 121-node tree. |
 | [03 · Moving frames](notebooks/03_moving_frames.ipynb) | Klein's idea of geometry as "what survives a group of transformations", a moving frame computed in SymPy, and the frame on the Poincaré disk that powers the demo. |
 | [04 · Curved spaces in Python](notebooks/04_curved_spaces_in_python.ipynb) | Four Python packages for curved spaces, and how to start with each. |
 | [05 · The demo](notebooks/05_demo_moving_frame_search.ipynb) | The talk's demo: a hierarchy in the Poincaré disk, searched with a moving frame. |
 
 ## About the author
 
-**Dr Ana Rojo-Echeburúa** is Head of FIN and Fractional CTO at AinTools. She's a mathematician with a PhD from the University of Kent, where she worked on moving frames and Noether's conservation laws, supervised by Elizabeth Mansfield. She's spent about ten years building AI systems, leading engineering teams and founding startups, and she still thinks the most useful question in AI is "what are you actually measuring?".
+**Dr Ana Rojo-Echeburúa** is Head of FIN and Fractional CTO at AinTools. She's a mathematician with a PhD from the University of Kent, where she worked on moving frames and Noether's conservation laws, supervised by Elizabeth Mansfield. She's spent about ten years building AI systems, leading engineering teams and founding startups.
 
 ## References
 
 - Mikolov et al. (2013). Efficient Estimation of Word Representations in Vector Space. arXiv:1301.3781.
 - Pennington, Socher & Manning (2014). GloVe. EMNLP.
 - Devlin et al. (2019). BERT. NAACL.
+- Peters et al. (2018). Deep Contextualized Word Representations (ELMo). NAACL.
 - Reimers & Gurevych (2019). Sentence-BERT. EMNLP.
 - Karpukhin et al. (2020). Dense Passage Retrieval for Open-Domain Question Answering. EMNLP.
+- Wang et al. (2022). Text Embeddings by Weakly-Supervised Contrastive Pre-training (E5). arXiv:2212.03533.
+- Robertson & Zaragoza (2009). The Probabilistic Relevance Framework: BM25 and Beyond. Foundations and Trends in Information Retrieval.
 - Cormack, Clarke & Büttcher (2009). Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods. SIGIR.
 - Ethayarajh (2019). How Contextual are Contextualized Word Representations? EMNLP.
 - Gao, Yao & Chen (2021). SimCSE: Simple Contrastive Learning of Sentence Embeddings. EMNLP.
@@ -58,6 +63,9 @@ If you'd like a friendlier walk through what happens in each notebook before you
 - He et al. (2025). HELM: Hyperbolic Large Language Models via Mixture-of-Curvature Experts. NeurIPS.
 - Madhu et al. (2026). HypRAG: Hyperbolic Dense Retrieval for Retrieval Augmented Generation. ICML.
 - Kochurov, Karimov & Kozlukov (2020). Geoopt: Riemannian Optimization in PyTorch. arXiv:2005.02819.
+- Řehůřek & Sojka (2010). Software Framework for Topic Modelling with Large Corpora (gensim). LREC Workshop on New Challenges for NLP Frameworks.
+- van Spengler, Wirth & Mettes (2023). HypLL: The Hyperbolic Learning Library. ACM Multimedia. arXiv:2306.06154.
+- Miolane et al. (2020). Geomstats: A Python Package for Riemannian Geometry in Machine Learning. JMLR 21.
 - Klein (1872). Vergleichende Betrachtungen über neuere geometrische Forschungen.
 - Noether (1918). Invariante Variationsprobleme.
 - Fels & Olver (1998, 1999). Moving Coframes I and II. Acta Appl. Math.
