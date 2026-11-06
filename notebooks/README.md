@@ -58,3 +58,14 @@ Run them in order. Each one builds on the one before.
 7. **geomstats: three curvatures side by side.** Shortest paths on a sphere, a plane and a hyperbolic disk, and the circle-length formulas from the talk measured numerically.
 8. **What about vector databases?** None of them has a hyperbolic index yet. You try brute force (fast enough for 100,000 points), re-ranking a flat shortlist (it needs a big shortlist), and a change of coordinates that turns exact hyperbolic search into ordinary dot-product search.
 9. **Takeaway.** The maths is packaged, the costs are manageable, and a good weekend project is to embed your own taxonomy both ways.
+
+## 05 · The demo: searching a hierarchy with a moving frame
+
+**The question:** can we search a hierarchy in a way that's correct and doesn't depend on any arbitrary choice? This is the demo from the talk, start to finish.
+
+1. **Embed the hierarchy.** Twelve words (animals and documents) go into the Poincaré disk with gensim, stored as complex numbers. General words land near the centre, specific ones near the edge.
+2. **The group and the moving frame.** For a query word, the frame slides it to the centre of the disk, then rotates the other word onto a straight axis. The only thing left is one number, how far that other word is from the centre. You see it in a three-panel picture with dog and owl.
+3. **The invariant is the hyperbolic distance.** That one number turns out to be exactly the hyperbolic distance, matching the textbook formula and gensim to about 14 decimal places, for every pair of words, even though we never typed the formula in.
+4. **Search.** Sort by that number and you get a search that follows the hierarchy. For dog you get whale and cat first (siblings), then mammal (the parent).
+5. **Nothing arbitrary.** You move the whole embedding with 100 random symmetries of the disk. The picture changes completely, and the search results never change. Then you try the same with cosine similarity, and its answers change every time.
+6. **Takeaway.** Choose the symmetry, put everything in standard position, then measure only what survives.

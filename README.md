@@ -29,6 +29,7 @@ If you want the plain-words, step-by-step version of what happens in each notebo
 | [02 · Hyperbolic embeddings](notebooks/02_hyperbolic_embeddings.ipynb) | Why trees don't fit in flat space, the Poincaré disk built from scratch, and a 2D hyperbolic embedding of a small hierarchy next to a Euclidean one. |
 | [03 · Moving frames](notebooks/03_moving_frames.ipynb) | Klein's idea of geometry as "what survives a group of transformations", a moving frame computed in SymPy, and the frame on the Poincaré disk that powers the demo. |
 | [04 · Curved spaces in Python](notebooks/04_curved_spaces_in_python.ipynb) | Four Python packages for curved spaces, and how to start with each. |
+| [05 · The demo](notebooks/05_demo_moving_frame_search.ipynb) | The talk's demo: a hierarchy in the Poincaré disk, searched with a moving frame. |
 
 ## About the author
 
