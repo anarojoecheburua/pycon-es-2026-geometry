@@ -21,7 +21,16 @@ Run them in order. Each one builds on the one before.
 
 ## 02 · Hyperbolic embeddings
 
-*Coming next.*
+**The question:** if flat space can't hold a hierarchy, is there a space that can?
+
+1. **Why flat space struggles with trees.** A tree doubles its nodes at every level, and flat space only grows like a polynomial, so the deep levels run out of room. You see it on one plot.
+2. **Three curvatures.** You measure how long a circle is on a sphere, on a flat plane and in hyperbolic space. In hyperbolic space circles grow faster and faster, and that extra room is what trees need.
+3. **The Poincaré disk from scratch.** Hyperbolic space squeezed into a disc, where the edge is infinitely far away. You write the distance formula in a few lines of numpy, see that a small step near the edge is a huge distance, and draw a whole tree in the disk.
+4. **Train a hierarchy in 2D.** You give gensim a list of (child, parent) pairs like ("dog", "mammal") and it places them in the disk. General words land near the centre, specific ones near the edge, and each branch gets its own direction.
+5. **Flat vs hyperbolic, same data.** You train a 121-node tree in both spaces with exactly the same settings and score how well each one keeps the hierarchy. Hyperbolic wins by a lot, and the published WordNet results say the same thing at scale.
+6. **geoopt.** A quick tour of the PyTorch library that handles the curved-space maths, checked against our hand-written formula.
+7. **Results from retrieval and LLMs.** What happened when researchers put hyperbolic geometry into RAG, image–text models and LLMs.
+8. **The costs.** Running out of decimal places near the edge, trickier training, and no support in today's vector databases.
 
 ## 03 · Moving frames
 
