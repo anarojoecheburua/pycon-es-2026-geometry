@@ -1,6 +1,6 @@
 # Questioning the mathematical foundations of AI
 
-Companion notebooks for my talk at **PyCon España 2026** (Barcelona, 6 to 8 November 2026).
+Companion notebooks for my talk at **PyCon España 2026** (Barcelona, 8 November 2026).
 
 Almost every production retrieval system today does the same thing. It turns text into vectors with an embedding model, then compares those vectors with cosine similarity in flat space. It works well enough that most of us never stop to ask what it assumes. These notebooks do stop and ask. You'll see what that flat, cosine-based geometry takes for granted, where it starts to break (hierarchies, one-way relationships, scores that mean different things in different models), and two alternatives that come from mathematics: hyperbolic space and moving frames.
 
